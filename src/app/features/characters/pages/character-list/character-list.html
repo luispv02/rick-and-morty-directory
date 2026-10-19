@@ -1,0 +1,94 @@
+<main class="min-h-screen bg-black text-white">
+
+  <!-- Header -->
+  <header class="border-b border-gray-800">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+      <a href="/" class="text-xl font-bold tracking-tight">
+        Rick & Morty <span class="text-green-400">Explorer</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <section class="mx-auto max-w-7xl px-6 py-12">
+    <div class="mb-10 text-center">
+      <p class="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-green-400">
+        Universo Rick & Morty
+      </p>
+
+      <h1 class="text-4xl font-extrabold tracking-tight md:text-5xl">Explora tus personajes favoritos</h1>
+    </div>
+
+    <!-- Search -->
+    <div class="mx-auto mb-6 max-w-2xl">
+      <label for="search" class="mb-2 block text-sm font-medium text-gray-300">
+        Buscar personaje
+      </label>
+
+      <input
+        id="search"
+        type="search"
+        placeholder="Ej. Rick Sanchez..."
+        class="w-full rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 text-white outline-none transition placeholder:text-gray-500 focus:border-green-400 focus:ring-2 focus:ring-green-400/20"
+      />
+    </div>
+
+    <!-- Filters -->
+    <div class="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div>
+        <label for="status" class="mb-2 block text-sm text-gray-300"> Estado </label>
+
+        <select
+          id="status"
+          class="w-full rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 text-white outline-none focus:border-green-400"
+        >
+          <option value="">Todos</option>
+          <option value="alive">Vivo</option>
+          <option value="dead">Muerto</option>
+          <option value="unknown">Desconocido</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="species" class="mb-2 block text-sm text-gray-300"> Especie </label>
+
+        <select
+          id="species"
+          class="w-full rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 text-white outline-none focus:border-green-400"
+        >
+          <option value="">Todas</option>
+          <option value="human">Humano</option>
+          <option value="alien">Alienígena</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="gender" class="mb-2 block text-sm text-gray-300"> Género </label>
+
+        <select
+          id="gender"
+          class="w-full rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 text-white outline-none focus:border-green-400"
+        >
+          <option value="">Todos</option>
+          <option value="female">Femenino</option>
+          <option value="male">Masculino</option>
+          <option value="genderless">Sin género</option>
+          <option value="unknown">Desconocido</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Characters -->
+    <div class="mb-6 flex items-center justify-between">
+      <h2 class="text-xl font-bold">Personajes</h2>
+
+      <span class="text-sm text-gray-400"> {{ characters.length }} personaje </span>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      @for (character of characters; track character.id) {
+        <app-character-card [character]="character" />
+      }
+    </div>
+  </section>
+</main>
