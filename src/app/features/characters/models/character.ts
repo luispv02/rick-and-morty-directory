@@ -4,6 +4,10 @@ export interface Character {
   status: 'Alive' | 'Dead' | 'unknown';
   species: string;
   image: string;
+  gender: string;
+  origin: CharacterLocation;
+  location: CharacterLocation;
+  episode: string[];
 }
 
 export interface CharacterResponse {
@@ -21,4 +25,16 @@ export interface CharacterFilters {
   status?: string;
   species?: string;
   gender?: string;
+}
+
+export interface CharacterLocation {
+  name: string;
+  url: string;
+}
+
+export interface Episode {
+  id: number;
+  name: string;
+  episode: string;
+  air_date: string;
 }

@@ -1,0 +1,70 @@
+<main class="min-h-screen bg-black text-white">
+  <section class="mx-auto max-w-3xl px-6 py-12">
+    <a
+      routerLink="/"
+      class="mb-8 inline-block text-sm text-gray-400 transition hover:text-green-400 focus-visible:outline-2 focus-visible:outline-green-400"
+    >
+      ← Volver a personajes
+    </a>
+
+    @if (isLoading()) {
+      <p class="py-16 text-center text-gray-400" role="status">Cargando personaje...</p>
+    } @else if (errorMessage()) {
+      <p class="py-16 text-center text-red-400" role="alert">{{ errorMessage() }}</p>
+    } @else if (character(); as c) {
+      <article class="rounded-2xl border border-gray-800 p-6">
+        
+        <!-- character details -->
+        <div class="flex flex-col gap-6 sm:flex-row">
+          <img [src]="c.image" [alt]="c.name" class="size-36 shrink-0 rounded-xl object-cover" />
+
+          <div class="space-y-1.5">
+            <h1 class="text-xl font-semibold">{{ c.name }}</h1>
+
+            <p class="flex items-center gap-2 text-sm text-gray-300">
+              <span
+                class="size-2.5 rounded-full"
+                [class]="statusDotClass(c.status)"
+                aria-hidden="true"
+              ></span>
+              {{ statusLabel(c.status) }}
+            </p>
+
+            <p class="text-sm text-gray-400">Especie: {{ speciesLabel(c.species) }}</p>
+            <p class="text-sm text-gray-400">Género: {{ genderLabel(c.gender) }}</p>
+
+            <p class="pt-1">
+              <span class="font-semibold">Origen:</span> {{ placeLabel(c.origin.name) }}
+            </p>
+            <p>
+              <span class="font-semibold">Ubicación actual:</span>
+              {{ placeLabel(c.location.name) }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Episodes -->
+        <div class="mt-8 border-t border-gray-800 pt-6">
+          <h2 class="text-lg font-semibold">Episodios ({{ episodes().length }})</h2>
+
+          <ul
+            class="mt-4 max-h-96 space-y-5 overflow-y-auto pr-2"
+            tabindex="0"
+            aria-label="Lista de episodios"
+          >
+            @for (ep of episodes(); track ep.id) {
+              <li>
+                <p class="font-semibold">{{ ep.name }}</p>
+                <p class="mt-1 text-sm text-gray-400">
+                  {{ ep.episode }} · Fecha de emisión: {{ formatDate(ep.air_date) }}
+                </p>
+              </li>
+            } @empty {
+              <li class="text-gray-400">Sin episodios registrados.</li>
+            }
+          </ul>
+        </div>
+      </article>
+    }
+  </section>
+</main>
