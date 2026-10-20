@@ -29,6 +29,8 @@
         id="search"
         type="search"
         placeholder="Ej. Rick Sanchez..."
+        [ngModel]="searchTerm()"
+        (ngModelChange)="onSearch($event)"
         class="w-full rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 text-white outline-none transition placeholder:text-gray-500 focus:border-green-400 focus:ring-2 focus:ring-green-400/20"
       />
     </div>
@@ -40,6 +42,9 @@
 
         <select
           id="status"
+          name="status"
+          [ngModel]="status()"
+          (ngModelChange)="onStatus($event)"
           class="w-full rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 text-white outline-none focus:border-green-400"
         >
           <option value="">Todos</option>
@@ -54,6 +59,9 @@
 
         <select
           id="species"
+          name="species"
+          [ngModel]="species()"
+          (ngModelChange)="onSpecies($event)"
           class="w-full rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 text-white outline-none focus:border-green-400"
         >
           <option value="">Todas</option>
@@ -67,6 +75,9 @@
 
         <select
           id="gender"
+          name="gender"
+          [ngModel]="gender()"
+          (ngModelChange)="onGender($event)"
           class="w-full rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 text-white outline-none focus:border-green-400"
         >
           <option value="">Todos</option>
@@ -79,16 +90,77 @@
     </div>
 
     <!-- Characters -->
-    <div class="mb-6 flex items-center justify-between">
-      <h2 class="text-xl font-bold">Personajes</h2>
+    @if (!isLoading() && !errorMessage()) {
+      <span class="text-sm text-gray-400"> {{ totalCount() }} personajes </span>
+    }
 
-      <span class="text-sm text-gray-400"> {{ characters.length }} personaje </span>
-    </div>
+    @if (isLoading()) {
+      <p class="py-16 text-center text-gray-400" role="status">Cargando personajes...</p>
+    } @else if (errorMessage()) {
+      <div class="py-16 text-center" role="alert">
+        <p class="mb-4 text-red-400">{{ errorMessage() }}</p>
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-2">
+        @for (character of characters(); track character.id) {
+          <app-character-card [character]="character" />
+        } @empty {
+          <p class="col-span-full py-16 text-center text-gray-400">No se encontraron personajes.</p>
+        }
+      </div>
+    }
 
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      @for (character of characters; track character.id) {
-        <app-character-card [character]="character" />
-      }
-    </div>
+    <!-- Pagination -->
+    @if (totalPages() > 1) {
+      <nav class="mt-10 flex items-center justify-center gap-2" aria-label="Paginación">
+        <!-- Prev -->
+        <button
+          type="button"
+          (click)="prevPage()"
+          [disabled]="page() === 1 || isLoading()"
+          aria-label="Página anterior"
+          class="min-w-10 shrink-0 cursor-pointer rounded-xl border border-gray-700 px-3 py-2 transition hover:border-green-400 focus-visible:outline-2 focus-visible:outline-green-400 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-gray-700 sm:px-4"
+        >
+          <span class="sm:hidden" aria-hidden="true">‹</span>
+          <span class="hidden sm:inline">Anterior</span>
+        </button>
+
+        <!-- Mobile -->
+        <span class="whitespace-nowrap px-2 text-sm text-gray-400 sm:hidden" aria-live="polite">
+          Página {{ page() }} de {{ totalPages() }}
+        </span>
+
+        <!-- Desktop -->
+        @for (p of pages(); track $index) {
+          @if (p === null) {
+            <span class="hidden px-2 text-gray-500 sm:inline" aria-hidden="true">…</span>
+          } @else {
+            <button
+              type="button"
+              (click)="goToPage(p)"
+              [disabled]="isLoading()"
+              [attr.aria-current]="p === page() ? 'page' : null"
+              [attr.aria-label]="'Ir a la página ' + p"
+              class="hidden min-w-10 shrink-0 cursor-pointer rounded-xl border px-3 py-2 transition focus-visible:outline-2 focus-visible:outline-green-400 sm:inline-flex sm:justify-center"
+              [class]=" p === page() ? 'border-green-400 bg-green-400 font-semibold text-gray-950' : 'border-gray-700 hover:border-green-400'"
+            >
+              {{ p }}
+            </button>
+          }
+        }
+
+        <!-- Next -->
+        <button
+          type="button"
+          (click)="nextPage()"
+          [disabled]="page() >= totalPages() || isLoading()"
+          aria-label="Página siguiente"
+          class="min-w-10 shrink-0 cursor-pointer rounded-xl border border-gray-700 px-3 py-2 transition hover:border-green-400 focus-visible:outline-2 focus-visible:outline-green-400 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-gray-700 sm:px-4"
+        >
+          <span class="sm:hidden" aria-hidden="true">›</span>
+          <span class="hidden sm:inline">Siguiente</span>
+        </button>
+      </nav>
+    }
   </section>
 </main>
